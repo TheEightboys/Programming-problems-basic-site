@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.0/codemirror.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.0/theme/material.min.css">
+    <title>Online Code Editor</title>
+    <style>
+        .editor {
+            height: 400px; /* Set the height of the editor */
+        }
+    </style>
+</head>
+<body class="bg-light">
+
+<div class="container my-5">
+    <h1 class="text-center">Write and test your code here with our code editor !</h1>
+    <textarea id="code" class="editor">// Write your code here\nlet a = 10;\nlet b = 20;\nconsole.log(a + b);</textarea>
+    <button class="btn btn-primary mt-3" onclick="runCode()">Run Code</button>
+    <h2 class="mt-4">Output:</h2>
+    <pre id="output" class="bg-light border p-3"></pre>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.0/codemirror.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.0/mode/javascript/javascript.min.js"></script>
+<script>
+    // Initialize CodeMirror
+    var editor = CodeMirror.fromTextArea(document.getElementById("code"), {
+        lineNumbers: true,
+        mode: "javascript",
+        theme: "material",
+        matchBrackets: true,
+        autoCloseBrackets: true,
+    });
+
+    // Function to run the code
+    function runCode() {
+        const code = editor.getValue(); // Get the code from the editor
+        const outputArea = document.getElementById("output");
+        outputArea.textContent = ''; 
+
+        
+        const consoleLog = console.log;
+        console.log = function(message) {
+            outputArea.textContent += message + '\n'; 
+        };
+
+        try {
+            eval(code); // Evaluate the code
+        } catch (error) {
+            outputArea.textContent = error; // Display any errors
+        } finally {
+            console.log = consoleLog; // Restore original console.log
+        }
+    }
+</script>
+</body>
+</html>
